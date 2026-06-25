@@ -14,7 +14,7 @@ import { PromoBanner } from "@/components/sections/promo-banner";
 import { NewsletterSignup } from "@/components/sections/newsletter-signup";
 import { FooterCta } from "@/components/sections/footer-cta";
 
-export const revalidate = 3600; // re-render home page every hour
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Maison Noir — Considered Menswear",
