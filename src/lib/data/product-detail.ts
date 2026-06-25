@@ -4,6 +4,7 @@ import { connectToDatabase } from "@/lib/db/connect";
 import { Product, Review } from "@/models";
 import type { CardProduct } from "@/lib/data/home";
 import type { ProductSize } from "@/models/types";
+import type { SortOrder } from "mongoose";
 
 /**
  * Product detail page data layer. Distinct from `lib/data/products.ts`
@@ -62,7 +63,7 @@ export async function getProductBySlug(
   if (!product) return null;
 
   const variants: VariantOption[] = product.variants.map((variant) => ({
-    id: variant._id?.toString() ?? variant.sku,
+    id: (variant as unknown as { _id?: { toString(): string } })._id?.toString() ?? variant.sku,
     sku: variant.sku,
     size: variant.size,
     color: variant.color,
@@ -215,12 +216,12 @@ export async function getProductReviews(
 
   const filter = { product: productId, isApproved: true };
 
-  const sortOption =
+  const sortOption: Record<string, SortOrder> =
     sort === "highest"
-      ? { rating: -1 as const, createdAt: -1 as const }
+      ? { rating: -1, createdAt: -1 }
       : sort === "lowest"
-        ? { rating: 1 as const, createdAt: -1 as const }
-        : { createdAt: -1 as const };
+        ? { rating: 1, createdAt: -1 }
+        : { createdAt: -1 };
 
   const [total, distributionRows, reviews] = await Promise.all([
     Review.countDocuments(filter),

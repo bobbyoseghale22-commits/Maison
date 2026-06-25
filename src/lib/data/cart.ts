@@ -160,7 +160,7 @@ export async function addItemToCart(input: {
   if (!variant) throw new Error("That size/colour is unavailable.");
 
   const owner = await resolveOrCreateOwner();
-  const filter = ownerFilter(owner) as Record<string, string>;
+  const filter = ownerFilter(owner) as unknown as Record<string, string>;
 
   let cart = await Cart.findOne(filter);
   const existing = cart?.items.find((i) => i.sku === variant.sku);
@@ -207,7 +207,8 @@ export async function updateCartItem(
   const cart = await Cart.findOne(ownerFilter(owner) ?? undefined);
   if (!cart) throw new Error("Cart not found.");
 
-  const item = (cart.items as unknown as { id(id: string): typeof cart.items[0] | null }).id(itemId);
+  const cartDoc = cart;
+  const item = (cartDoc.items as unknown as { id(id: string): (typeof cartDoc.items)[0] | null }).id(itemId);
   if (!item) throw new RangeError("Item not in cart.");
 
   const product = await Product.findById(item.product)
@@ -229,10 +230,11 @@ export async function removeCartItem(itemId: string): Promise<CartView> {
   const cart = await Cart.findOne(ownerFilter(owner) ?? undefined);
   if (!cart) throw new Error("Cart not found.");
 
-  const item = (cart.items as unknown as { id(id: string): typeof cart.items[0] | null }).id(itemId);
+  const cartDoc = cart;
+  const item = (cartDoc.items as unknown as { id(id: string): (typeof cartDoc.items)[0] | null }).id(itemId);
   if (!item) throw new RangeError("Item not in cart.");
 
-  item.deleteOne();
+  (cart.items as unknown as { pull(id: unknown): void }).pull((item as unknown as { _id: unknown })._id);
   await cart.save();
   return populatedView(cart._id);
 }

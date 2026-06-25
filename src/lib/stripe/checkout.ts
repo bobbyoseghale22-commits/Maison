@@ -9,6 +9,8 @@ import { validateCoupon, computeTotals } from "@/lib/data/checkout";
 import { generateOrderNumber } from "@/lib/helpers";
 import { env } from "@/config/env";
 import type { CheckoutInput } from "@/lib/validations/checkout";
+import type { OrderDocument } from "@/models/Order";
+import type { HydratedDocument } from "mongoose";
 
 const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 
@@ -138,7 +140,7 @@ export async function createCheckoutSession(
   const totals = computeTotals(subtotal, couponView);
 
   // --- Create pending Order first so we have a reference ID ---
-  let order = null;
+  let order: HydratedDocument<OrderDocument> | null = null;
   let attempts = 0;
 
   while (!order && attempts < 5) {
@@ -199,11 +201,11 @@ export async function createCheckoutSession(
       ? { discounts: [{ coupon: stripeCouponId }] }
       : {}),
     ...(customerEmail ? { customer_email: customerEmail } : {}),
-    client_reference_id: order._id.toString(),
+    client_reference_id: (order._id as { toString(): string }).toString(),
     success_url: `${BASE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${BASE_URL}/checkout/cancel?order=${order.orderNumber}`,
     metadata: {
-      orderId: order._id.toString(),
+      orderId: (order._id as { toString(): string }).toString(),
       orderNumber: order.orderNumber,
     },
   });

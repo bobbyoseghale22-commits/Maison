@@ -97,7 +97,8 @@ async function syncProductRating(productId: Types.ObjectId) {
   // effectively free after the first call.
   const { Product } = await import("@/models/Product");
 
-  const result = await reviewSchema.model("Review").aggregate<{
+  const ReviewModel: Model<ReviewDocument> = models.Review ?? model<ReviewDocument>("Review", reviewSchema);
+  const result = await ReviewModel.aggregate<{
     count: number;
     avg: number;
   }>([
@@ -127,7 +128,7 @@ reviewSchema.post("save", async function () {
 
 // `findOneAndUpdate` is used by admin approve/reject
 reviewSchema.post("findOneAndUpdate", async function () {
-  const doc = await this.model.findOne(this.getQuery()).select("product").lean();
+  const doc = await this.model.findOne(this.getQuery()).select("product").lean() as { product?: Types.ObjectId } | null;
   if (doc?.product) {
     await syncProductRating(doc.product as Types.ObjectId);
   }

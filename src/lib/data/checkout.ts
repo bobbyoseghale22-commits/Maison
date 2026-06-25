@@ -7,7 +7,10 @@ import { readGuestId } from "@/lib/cart/guest-id";
 import { generateOrderNumber } from "@/lib/helpers";
 import type { AddressInput, CheckoutInput } from "@/lib/validations/checkout";
 import type { CouponDocument } from "@/models/Coupon";
+import type { OrderDocument } from "@/models/Order";
+import type { HydratedDocument } from "mongoose";
 import { computeTotals } from "@/lib/checkout-utils";
+import type { CouponView } from "@/lib/checkout-utils";
 
 // Re-export shared types so server callers can still import from here
 export type { CouponView, CheckoutTotals } from "@/lib/checkout-utils";
@@ -260,7 +263,7 @@ export async function createOrder(
 
   // --- Create Order ---
   let attempts = 0;
-  let order = null;
+  let order: HydratedDocument<OrderDocument> | null = null;
 
   while (!order && attempts < 5) {
     attempts++;
@@ -312,7 +315,7 @@ export async function createOrder(
     user?.email ?? input.guestEmail ?? "";
 
   return {
-    orderId: order._id.toString(),
+    orderId: (order._id as { toString(): string }).toString(),
     orderNumber: order.orderNumber,
     email,
     total: totals.total,

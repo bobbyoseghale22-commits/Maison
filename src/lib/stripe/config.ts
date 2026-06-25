@@ -7,7 +7,7 @@ import { env } from "@/config/env";
  * so the API version stays consistent across the codebase.
  */
 export const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-02-24.acacia",
+  apiVersion: "2024-12-18.acacia",
   typescript: true,
   appInfo: {
     name: "ecommerce-app",

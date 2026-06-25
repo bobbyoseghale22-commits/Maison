@@ -4,6 +4,7 @@ import { connectToDatabase } from "@/lib/db/connect";
 import { Wishlist, Product } from "@/models";
 import { requireUser } from "@/lib/auth/utils";
 import type { ProductSize } from "@/models/types";
+import { Types } from "mongoose";
 
 /**
  * Wishlist view-model — flat, serialisable shape exposed to the API
@@ -138,7 +139,7 @@ export async function addToWishlist(productId: string): Promise<WishlistView> {
   );
 
   if (!alreadyIn) {
-    wishlist.items.push({ product: productId, addedAt: new Date() });
+    wishlist.items.push({ product: new Types.ObjectId(productId), addedAt: new Date() });
     await wishlist.save();
   }
 
