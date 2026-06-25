@@ -1,0 +1,66 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# Deploys the Next.js app as a single Web Service. MongoDB Atlas, Stripe,
+# and Cloudinary are external managed services and are not provisioned
+# by Render — their credentials are supplied as environment variables
+# below (sync: false means they must be set manually in the Render
+# dashboard rather than committed to source control).
+services:
+  - type: web
+    name: ecommerce-app
+    runtime: node
+    plan: starter
+    region: oregon
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /
+    autoDeploy: true
+    numInstances: 1
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 3000
+
+      # ---- App -----------------------------------------------------------
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
+
+      # ---- MongoDB Atlas -----------------------------------------------------------
+      - key: MONGODB_URI
+        sync: false
+
+      # ---- Auth.js v5 -----------------------------------------------------------
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: AUTH_URL
+        sync: false
+      - key: AUTH_TRUST_HOST
+        value: "true"
+      - key: AUTH_GOOGLE_ID
+        sync: false
+      - key: AUTH_GOOGLE_SECRET
+        sync: false
+
+      # ---- Stripe -----------------------------------------------------------
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+        sync: false
+
+      # ---- Cloudinary -----------------------------------------------------------
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_UPLOAD_PRESET
+        sync: false
