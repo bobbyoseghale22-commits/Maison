@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Theme tokens — premium men's fashion, monochrome.
+ *
+ * Named palette (full rationale in src/components/layout/README.md):
+ * Ink (near-black, warm not pure #000), Paper (warm off-white),
+ * Charcoal (mid-tone for secondary text/borders), Smoke (pale
+ * charcoal tint for hairlines), Gold-ash (desaturated brass — the
+ * single restrained accent, used only for focus rings and the
+ * signature underline treatment).
+ *
+ * Variable *names* match Shadcn's defaults (--background, --primary,
+ * etc.) so every Shadcn UI component automatically inherits this
+ * palette without per-component overrides — only the HSL values
+ * changed, not the token contract.
+ */
+@layer base {
+  :root {
+    /* Paper / Ink as the light-mode surface pair */
+    --background: 60 9% 98%; /* Paper #FAFAF8 */
+    --foreground: 60 3% 4%; /* Ink #0A0A0A */
+
+    --card: 60 9% 98%;
+    --card-foreground: 60 3% 4%;
+
+    --popover: 60 9% 98%;
+    --popover-foreground: 60 3% 4%;
+
+    --primary: 60 3% 4%; /* Ink */
+    --primary-foreground: 60 9% 98%; /* Paper */
+
+    --secondary: 60 6% 93%; /* Smoke #E8E6E1 */
+    --secondary-foreground: 60 3% 4%;
+
+    --muted: 60 6% 93%;
+    --muted-foreground: 70 3% 26%; /* Charcoal #3A3A38 */
+
+    --accent: 33 16% 55%; /* Gold-ash #9C8F7C */
+    --accent-foreground: 60 9% 98%;
+
+    --destructive: 4 64% 38%;
+    --destructive-foreground: 60 9% 98%;
+
+    --success: 142 30% 30%;
+    --success-foreground: 60 9% 98%;
+
+    --border: 60 6% 88%;
+    --input: 60 6% 88%;
+    --ring: 33 16% 55%; /* Gold-ash focus ring — the one accent */
+
+    --radius: 0.125rem; /* near-square — luxury menswear reads hairline, not rounded */
+  }
+
+  /* Ink as the surface, Paper as the foreground — same token contract, inverted roles */
+  .dark {
+    --background: 60 3% 4%; /* Ink */
+    --foreground: 60 9% 98%; /* Paper */
+
+    --card: 60 3% 6%;
+    --card-foreground: 60 9% 98%;
+
+    --popover: 60 3% 6%;
+    --popover-foreground: 60 9% 98%;
+
+    --primary: 60 9% 98%;
+    --primary-foreground: 60 3% 4%;
+
+    --secondary: 70 3% 14%; /* Charcoal, darkened for dark surfaces */
+    --secondary-foreground: 60 9% 98%;
+
+    --muted: 70 3% 14%;
+    --muted-foreground: 60 5% 64%;
+
+    --accent: 33 16% 55%; /* Gold-ash stays constant across themes */
+    --accent-foreground: 60 3% 4%;
+
+    --destructive: 4 55% 45%;
+    --destructive-foreground: 60 9% 98%;
+
+    --success: 142 30% 40%;
+    --success-foreground: 60 9% 98%;
+
+    --border: 70 3% 16%;
+    --input: 70 3% 16%;
+    --ring: 33 16% 55%;
+  }
+}
+
+/**
+ * Typography system.
+ * --font-display: Playfair Display — a high-contrast serif used only
+ *   for the wordmark and large editorial headings, restrained to
+ *   those two roles so it stays a signature, not a default.
+ * --font-sans: Inter — body copy and UI chrome.
+ * Both are wired as next/font CSS variables in src/app/layout.tsx.
+ */
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  /* Tracked, uppercase label style — the recurring "garment tag" motif
+     used for nav links, eyebrows, and section labels throughout. */
+  .text-label {
+    @apply font-sans text-xs font-medium uppercase tracking-[0.18em];
+  }
+}
