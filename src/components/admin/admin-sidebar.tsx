@@ -56,7 +56,7 @@ export function AdminSidebar() {
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto p-3">
         <ul className="space-y-0.5">
-          {NAV_ITEMS.map(({ label, href, icon: Icon, exact }) => (
+          {NAV_ITEMS.map(({ label, href, icon: Icon, exact = false }) => (
             <li key={href}>
               <Link
                 href={href}

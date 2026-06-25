@@ -34,10 +34,12 @@ export function Sparkline({
     y: pad + innerH - ((v - min) / range) * innerH,
   }));
 
-  let d = `M ${pts[0].x} ${pts[0].y}`;
+  const firstPt = pts[0];
+  let d = firstPt ? `M ${firstPt.x} ${firstPt.y}` : "";
   for (let i = 1; i < pts.length; i++) {
     const prev = pts[i - 1];
     const curr = pts[i];
+    if (!prev || !curr) continue;
     const cx = (curr.x - prev.x) / 3;
     d += ` C ${prev.x + cx} ${prev.y}, ${curr.x - cx} ${curr.y}, ${curr.x} ${curr.y}`;
   }

@@ -64,14 +64,19 @@ export function LineChart({
   const points = data.map((d, i) => ({ x: ptX(i), y: ptY(d.value) }));
 
   function buildPath(): string {
+    if (points.length === 0) return "";
     if (points.length === 1) {
       const p = points[0];
+      if (!p) return "";
       return `M ${p.x} ${p.y}`;
     }
-    let d = `M ${points[0].x} ${points[0].y}`;
+    const first = points[0];
+    if (!first) return "";
+    let d = `M ${first.x} ${first.y}`;
     for (let i = 0; i < points.length - 1; i++) {
       const p0 = points[i];
       const p1 = points[i + 1];
+      if (!p0 || !p1) continue;
       // Control points at 1/3 of the horizontal distance
       const cx = (p1.x - p0.x) / 3;
       d += ` C ${p0.x + cx} ${p0.y}, ${p1.x - cx} ${p1.y}, ${p1.x} ${p1.y}`;
@@ -82,10 +87,11 @@ export function LineChart({
   const linePath = buildPath();
 
   // Area path: line path + closing vertical + horizontal back to start
-  const areaPath =
-    `${linePath} ` +
-    `L ${points[points.length - 1].x} ${PAD.top + innerH} ` +
-    `L ${points[0].x} ${PAD.top + innerH} Z`;
+  const lastPt = points[points.length - 1];
+  const firstPt = points[0];
+  const areaPath = lastPt && firstPt
+    ? `${linePath} L ${lastPt.x} ${PAD.top + innerH} L ${firstPt.x} ${PAD.top + innerH} Z`
+    : "";
 
   return (
     <div className={cn("w-full overflow-x-auto", className)}>
@@ -138,10 +144,13 @@ export function LineChart({
         />
 
         {/* Data points + labels */}
-        {points.map((pt, i) => (
-          <g key={data[i].label}>
+        {points.map((pt, i) => {
+          const datum = data[i];
+          if (!datum) return null;
+          return (
+          <g key={datum.label}>
             <circle cx={pt.x} cy={pt.y} r={3} fill={strokeColor}>
-              <title>{`${data[i].label}: ${formatValue(data[i].value)}`}</title>
+              <title>{`${datum.label}: ${formatValue(datum.value)}`}</title>
             </circle>
             {/* X-axis label — only show every other label when crowded */}
             {(data.length <= 7 || i % 2 === 0 || i === data.length - 1) && (
@@ -153,11 +162,12 @@ export function LineChart({
                 fill="hsl(var(--muted-foreground))"
                 fontFamily="var(--font-sans, sans-serif)"
               >
-                {data[i].month}
+                {datum.month}
               </text>
             )}
           </g>
-        ))}
+          );
+        })}
 
         {/* Y-axis line */}
         <line
