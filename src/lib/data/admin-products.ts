@@ -50,15 +50,18 @@ export async function adminGetProduct(
     price: doc.price,
     compareAtPrice: doc.compareAtPrice,
     images: doc.images,
-    variants: doc.variants.map((v) => ({
-      id: v._id?.toString() ?? "",
-      sku: v.sku,
-      size: v.size,
-      color: v.color,
-      colorHex: v.colorHex,
-      stock: v.stock,
-      priceOverride: v.priceOverride,
-    })),
+    variants: doc.variants.map((v) => {
+      const variant = v as typeof v & { _id?: { toString(): string } };
+      return {
+        id: variant._id?.toString() ?? "",
+        sku: v.sku,
+        size: v.size,
+        color: v.color,
+        colorHex: v.colorHex,
+        stock: v.stock,
+        priceOverride: v.priceOverride,
+      };
+    }),
     tags: doc.tags,
     isActive: doc.isActive,
     isFeatured: doc.isFeatured,
