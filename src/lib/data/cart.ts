@@ -134,6 +134,7 @@ export async function getCart(): Promise<CartView | null> {
   const owner = await resolveOwner();
   if (owner.kind === "none") return null;
   const filter = ownerFilter(owner);
+  if (!filter) return null;
   const doc = await Cart.findOne(filter).populate(POPULATE).lean();
   if (!doc) return null;
   return toView(doc as unknown as LeanPopulatedCart);
@@ -203,10 +204,10 @@ export async function updateCartItem(
   const owner = await resolveOwner();
   if (owner.kind === "none") throw new Error("No active cart.");
 
-  const cart = await Cart.findOne(ownerFilter(owner));
+  const cart = await Cart.findOne(ownerFilter(owner) ?? undefined);
   if (!cart) throw new Error("Cart not found.");
 
-  const item = cart.items.id(itemId);
+  const item = (cart.items as unknown as { id(id: string): typeof cart.items[0] | null }).id(itemId);
   if (!item) throw new RangeError("Item not in cart.");
 
   const product = await Product.findById(item.product)
@@ -225,10 +226,10 @@ export async function removeCartItem(itemId: string): Promise<CartView> {
   const owner = await resolveOwner();
   if (owner.kind === "none") throw new Error("No active cart.");
 
-  const cart = await Cart.findOne(ownerFilter(owner));
+  const cart = await Cart.findOne(ownerFilter(owner) ?? undefined);
   if (!cart) throw new Error("Cart not found.");
 
-  const item = cart.items.id(itemId);
+  const item = (cart.items as unknown as { id(id: string): typeof cart.items[0] | null }).id(itemId);
   if (!item) throw new RangeError("Item not in cart.");
 
   item.deleteOne();
