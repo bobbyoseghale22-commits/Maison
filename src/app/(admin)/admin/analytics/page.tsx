@@ -158,7 +158,11 @@ export default async function AdminAnalyticsPage() {
         >
           <div className="flex justify-center pt-2">
             <DonutChart
-              data={orderStatusBreakdown}
+              data={orderStatusBreakdown.map((s) => ({
+                label: s.status,
+                value: s.count,
+                pct: s.pct,
+              }))}
               total={totals.orders}
               centerLabel="orders"
               size={180}
