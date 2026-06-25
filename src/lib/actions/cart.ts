@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Types } from "mongoose";
 
 import { connectToDatabase } from "@/lib/db/connect";
 import { Cart, Product } from "@/models";
@@ -102,7 +103,7 @@ export async function addToCart(input: unknown): Promise<CartActionResult> {
     existingItem.quantity = requestedTotal;
   } else {
     cart.items.push({
-      product: productId,
+      product: new Types.ObjectId(productId),
       sku: variant.sku,
       size,
       color,

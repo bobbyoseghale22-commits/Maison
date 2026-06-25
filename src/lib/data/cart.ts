@@ -1,5 +1,6 @@
 import "server-only";
 
+import { Types } from "mongoose";
 import { connectToDatabase } from "@/lib/db/connect";
 import { Cart, Product } from "@/models";
 import { getCurrentUser } from "@/lib/auth/utils";
@@ -181,7 +182,7 @@ export async function addItemToCart(input: {
     existing.quantity = newQty;
   } else {
     cart.items.push({
-      product: productId,
+      product: new Types.ObjectId(productId),
       sku: variant.sku,
       size,
       color,

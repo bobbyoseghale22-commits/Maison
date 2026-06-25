@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Types } from "mongoose";
 
 import { connectToDatabase } from "@/lib/db/connect";
 import { Wishlist, Product } from "@/models";
@@ -72,7 +73,7 @@ export async function toggleWishlistItem(
     wishlist.items.splice(existingIndex, 1);
     isInWishlist = false;
   } else {
-    wishlist.items.push({ product: productId, addedAt: new Date() });
+    wishlist.items.push({ product: new Types.ObjectId(productId), addedAt: new Date() });
     isInWishlist = true;
   }
 
