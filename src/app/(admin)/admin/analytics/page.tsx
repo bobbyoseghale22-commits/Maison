@@ -245,9 +245,10 @@ export default async function AdminAnalyticsPage() {
                 .map((rev, i) => {
                   const orders = [...monthlyOrders].reverse()[i];
                   const customers = [...monthlyCustomers].reverse()[i];
+                  const ordersValue = orders?.value ?? 0;
                   const avgOrd =
-                    orders.value > 0
-                      ? rev.value / orders.value
+                    ordersValue > 0
+                      ? rev.value / ordersValue
                       : 0;
 
                   return (
@@ -262,10 +263,10 @@ export default async function AdminAnalyticsPage() {
                         {formatCurrency(rev.value, { isWholeUnit: true })}
                       </td>
                       <td className="py-3 pr-6 tabular-nums text-foreground">
-                        {orders.value}
+                        {ordersValue}
                       </td>
                       <td className="py-3 pr-6 tabular-nums text-foreground">
-                        {customers.value}
+                        {customers?.value ?? 0}
                       </td>
                       <td className="py-3 pr-6 tabular-nums text-muted-foreground">
                         {avgOrd > 0
