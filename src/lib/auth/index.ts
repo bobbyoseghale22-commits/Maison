@@ -127,14 +127,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           emailVerified: new Date(),
           role: "customer",
         });
-        user.id = created._id.toString();
+        user.id = (created._id as { toString(): string }).toString();
         user.role = created.role;
         return true;
       }
 
       if (!existing.isActive) return false;
 
-      user.id = existing._id.toString();
+      user.id = (existing._id as { toString(): string }).toString();
       user.role = existing.role;
       return true;
     },
