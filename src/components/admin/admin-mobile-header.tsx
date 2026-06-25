@@ -20,7 +20,12 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-const NAV_ITEMS = [
+const NAV_ITEMS: Array<{
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact?: boolean;
+}> = [
   { label: "Dashboard",    href: "/admin",                  icon: LayoutDashboard, exact: true },
   { label: "Analytics",   href: "/admin/analytics",         icon: BarChart2 },
   { label: "Products",    href: "/admin/products",          icon: Package },
@@ -30,7 +35,7 @@ const NAV_ITEMS = [
   { label: "Customers",   href: "/admin/customers",         icon: Users },
   { label: "Coupons",     href: "/admin/coupons",           icon: Tag },
   { label: "Upload Images", href: "/admin/products/upload", icon: ImagePlus },
-] as const;
+];
 
 /** Top bar + slide-down nav shown on mobile (below lg breakpoint). */
 export function AdminMobileHeader() {

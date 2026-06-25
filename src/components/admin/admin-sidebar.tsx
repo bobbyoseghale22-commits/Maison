@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -16,7 +17,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
+const NAV_ITEMS: Array<{
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact?: boolean;
+}> = [
   { label: "Dashboard",    href: "/admin",                  icon: LayoutDashboard, exact: true },
   { label: "Analytics",   href: "/admin/analytics",         icon: BarChart2 },
   { label: "Products",    href: "/admin/products",          icon: Package },
@@ -26,7 +32,7 @@ const NAV_ITEMS = [
   { label: "Customers",   href: "/admin/customers",         icon: Users },
   { label: "Coupons",     href: "/admin/coupons",           icon: Tag },
   { label: "Upload Images", href: "/admin/products/upload", icon: ImagePlus },
-] as const;
+];
 
 /**
  * Persistent left sidebar for the admin area. Desktop-only — the
