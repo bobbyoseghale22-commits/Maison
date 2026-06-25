@@ -24,13 +24,11 @@ function inputCls(hasError?: boolean) {
   );
 }
 
-export default function LoginPage() {
-  return (
-    <React.Suspense>
-      <LoginForm />
-    </React.Suspense>
-  );
-}
+function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const {
     register,
@@ -181,5 +179,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <React.Suspense>
+      <LoginForm />
+    </React.Suspense>
   );
 }
