@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Tag } from "lucide-react";
 
 import type { CartView } from "@/lib/data/cart";
-import type { CheckoutTotals } from "@/lib/data/checkout";
+import type { CheckoutTotals } from "@/lib/checkout-utils";
 import { formatCurrency } from "@/lib/helpers";
 
 interface OrderSummaryProps {

@@ -184,7 +184,7 @@ const CartContext = React.createContext<UseCartReturn | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const cart = useCart();
-  return <CartContext.Provider value={cart}>{children}</CartContext.Provider>;
+  return React.createElement(CartContext.Provider, { value: cart }, children);
 }
 
 export function useCartContext(): UseCartReturn {

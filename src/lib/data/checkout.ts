@@ -7,39 +7,11 @@ import { readGuestId } from "@/lib/cart/guest-id";
 import { generateOrderNumber } from "@/lib/helpers";
 import type { AddressInput, CheckoutInput } from "@/lib/validations/checkout";
 import type { CouponDocument } from "@/models/Coupon";
+import { computeTotals } from "@/lib/checkout-utils";
 
-// ---------------------------------------------------------------------------
-// Pricing constants — placeholder rates until real tax/shipping is wired.
-// ---------------------------------------------------------------------------
-
-/** Flat shipping rate in whole currency units (e.g. USD). Free above FREE_SHIPPING_THRESHOLD. */
-const FLAT_SHIPPING = 12;
-const FREE_SHIPPING_THRESHOLD = 200;
-/** Tax rate as a decimal (8%). */
-const TAX_RATE = 0.08;
-
-// ---------------------------------------------------------------------------
-// View models
-// ---------------------------------------------------------------------------
-
-export interface CouponView {
-  couponId: string;
-  code: string;
-  description?: string;
-  type: "percentage" | "fixed";
-  value: number;
-  /** Computed discount amount against the current subtotal. */
-  discountAmount: number;
-}
-
-export interface CheckoutTotals {
-  subtotal: number;
-  shippingCost: number;
-  tax: number;
-  discount: number;
-  total: number;
-  coupon: CouponView | null;
-}
+// Re-export shared types so server callers can still import from here
+export type { CouponView, CheckoutTotals } from "@/lib/checkout-utils";
+export { computeTotals } from "@/lib/checkout-utils";
 
 export interface OrderConfirmation {
   orderId: string;
@@ -136,28 +108,6 @@ function computeDiscount(
   }
   // fixed
   return Math.min(coupon.value, subtotal);
-}
-
-// ---------------------------------------------------------------------------
-// Totals computation
-// ---------------------------------------------------------------------------
-
-/**
- * Computes checkout totals for a given subtotal and optional coupon.
- * Pure — does not touch the database when no coupon code is supplied.
- */
-export function computeTotals(
-  subtotal: number,
-  coupon: CouponView | null,
-): CheckoutTotals {
-  const discount = coupon?.discountAmount ?? 0;
-  const afterDiscount = Math.max(0, subtotal - discount);
-  const shippingCost =
-    afterDiscount >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING;
-  const tax = parseFloat((afterDiscount * TAX_RATE).toFixed(2));
-  const total = parseFloat((afterDiscount + shippingCost + tax).toFixed(2));
-
-  return { subtotal, shippingCost, tax, discount, total, coupon };
 }
 
 // ---------------------------------------------------------------------------

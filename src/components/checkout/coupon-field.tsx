@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Tag, X } from "lucide-react";
 
-import type { CouponView } from "@/lib/data/checkout";
+import type { CouponView } from "@/lib/checkout-utils";
 import { formatCurrency } from "@/lib/helpers";
 import { Button } from "@/components/ui/button";
 

@@ -8,8 +8,8 @@ import { toast } from "sonner";
 
 import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
 import type { CartView } from "@/lib/data/cart";
-import type { CouponView, CheckoutTotals } from "@/lib/data/checkout";
-import { computeTotals } from "@/lib/data/checkout";
+import type { CouponView, CheckoutTotals } from "@/lib/checkout-utils";
+import { computeTotals } from "@/lib/checkout-utils";
 import { Button } from "@/components/ui/button";
 import { AddressFields } from "@/components/checkout/address-fields";
 import { CouponField } from "@/components/checkout/coupon-field";

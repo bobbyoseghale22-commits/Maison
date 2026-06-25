@@ -196,9 +196,7 @@ function useWishlistState(): UseWishlistReturn {
 
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const value = useWishlistState();
-  return (
-    <WishlistContext.Provider value={value}>{children}</WishlistContext.Provider>
-  );
+  return React.createElement(WishlistContext.Provider, { value }, children);
 }
 
 export function useWishlistContext(): UseWishlistReturn {
