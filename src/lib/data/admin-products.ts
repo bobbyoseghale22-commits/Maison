@@ -191,7 +191,9 @@ export async function adminUpdateVariantStock(
   const product = await Product.findById(productId);
   if (!product) throw new Error("Product not found.");
 
-  const variant = product.variants.id(input.variantId);
+  // product.variants is a Mongoose DocumentArray at runtime; cast to access .id()
+  const variants = product.variants as unknown as { id(id: string): { stock: number } | null };
+  const variant = variants.id(input.variantId);
   if (!variant) throw new RangeError("Variant not found.");
 
   variant.stock = input.stock;
