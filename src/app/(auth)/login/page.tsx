@@ -25,10 +25,12 @@ function inputCls(hasError?: boolean) {
 }
 
 export default function LoginPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
-  const [showPassword, setShowPassword] = React.useState(false);
+  return (
+    <React.Suspense>
+      <LoginForm />
+    </React.Suspense>
+  );
+}
 
   const {
     register,
