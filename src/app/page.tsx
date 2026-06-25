@@ -38,7 +38,6 @@ export const metadata: Metadata = {
       "Tailored menswear cut from the finest cloth. Shop suiting, outerwear, footwear, and accessories.",
   },
 };
-};
 
 /**
  * Home page. Server Component end-to-end except for the two small
