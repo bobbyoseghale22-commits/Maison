@@ -110,7 +110,7 @@ export async function adminCreateProduct(
     isFeatured: input.isFeatured,
   });
 
-  return { id: product._id.toString(), slug: product.slug };
+  return { id: (product._id as { toString(): string }).toString(), slug: product.slug };
 }
 
 /**
