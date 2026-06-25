@@ -183,7 +183,7 @@ export default async function AdminAnalyticsPage() {
         ) : (
           <div className="space-y-3 pt-2">
             {topProducts.map((product, i) => {
-              const maxRevenue = topProducts[0].revenue;
+              const maxRevenue = topProducts[0]?.revenue ?? 0;
               const barPct = maxRevenue > 0
                 ? Math.round((product.revenue / maxRevenue) * 100)
                 : 0;
