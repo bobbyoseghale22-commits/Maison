@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { User } from "lucide-react";
 
-import { utilityNav } from "@/config/nav";
 import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/layout/navigation";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -16,39 +15,27 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      {/* Utility bar */}
-      <div className="hidden border-b border-border lg:block">
-        <div className="container flex h-9 items-center justify-end gap-6">
-          {utilityNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-label text-foreground/60 transition-colors hover:text-foreground"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      </div>
+      <div className="container flex h-16 items-center gap-4 sm:h-18 lg:h-20">
+        {/* Mobile hamburger — left of logo on small screens */}
+        <MobileNav />
 
-      {/* Main bar */}
-      <div className="container grid h-20 grid-cols-3 items-center">
-        <div className="flex items-center justify-start gap-2">
-          <MobileNav />
-          <Navigation />
-        </div>
+        {/* Logo — left on desktop, centered on mobile via flex-1 trick */}
+        <Link
+          href="/"
+          className="font-display text-xl italic tracking-tight text-foreground sm:text-2xl lg:mr-8 lg:text-3xl"
+          aria-label="Maison Noir — home"
+        >
+          Maison Noir
+        </Link>
 
-        <div className="flex justify-center">
-          <Link
-            href="/"
-            className="font-display text-2xl italic tracking-tight text-foreground sm:text-3xl"
-            aria-label="Maison Noir — home"
-          >
-            Maison Noir
-          </Link>
-        </div>
+        {/* Desktop nav — sits right of logo */}
+        <Navigation className="flex-1" />
 
-        <div className="flex items-center justify-end gap-1">
+        {/* Spacer pushes icons right on mobile (where Navigation is hidden) */}
+        <div className="flex-1 lg:hidden" />
+
+        {/* Icon cluster */}
+        <div className="flex items-center gap-0.5 sm:gap-1">
           <HeaderSearch />
           <MobileSearchSheet />
           {user ? (
