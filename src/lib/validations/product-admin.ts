@@ -1,13 +1,6 @@
 import { z } from "zod";
 import { PRODUCT_SIZES } from "@/models/types";
 
-/**
- * Admin product schemas — separate from `product.ts` (which handles
- * shop query params) because the shapes are completely different.
- * These mirror `IProduct` field-for-field so the validated output
- * maps directly onto the Mongoose document without translation.
- */
-
 export const productImageSchema = z.object({
   url: z.string().trim().url("Image URL must be a valid URL"),
   publicId: z.string().trim().min(1, "Cloudinary public ID is required"),
@@ -15,7 +8,6 @@ export const productImageSchema = z.object({
 });
 
 export const productVariantSchema = z.object({
-  /** _id from Mongoose — present on edit, absent on new variants. */
   _id: z.string().optional(),
   sku: z
     .string()
@@ -54,7 +46,6 @@ export const productFormSchema = z.object({
     .trim()
     .min(2, "Name must be at least 2 characters")
     .max(200, "Name must be at most 200 characters"),
-  /** Auto-generated from name on create, editable on update. */
   slug: z
     .string()
     .trim()
@@ -81,7 +72,7 @@ export const productFormSchema = z.object({
     .optional()
     .or(z.literal(0))
     .transform((v) => (v === 0 || v === undefined ? undefined : v)),
-    tags: z
+  tags: z
     .union([
       z.string().trim().optional().or(z.literal("")),
       z.array(z.string()),
@@ -90,13 +81,6 @@ export const productFormSchema = z.object({
       if (Array.isArray(v)) return v.map((t) => t.trim().toLowerCase()).filter(Boolean);
       return v ? v.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean) : [];
     }),
-    .string()
-    .trim()
-    .optional()
-    .or(z.literal(""))
-    .transform((v) =>
-      v ? v.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean) : [],
-    ),
   isActive: z.boolean().default(true),
   isFeatured: z.boolean().default(false),
   images: z
@@ -109,7 +93,6 @@ export const productFormSchema = z.object({
 
 export type ProductFormInput = z.infer<typeof productFormSchema>;
 
-/** Inventory-only patch: update a single variant's stock level. */
 export const inventoryPatchSchema = z.object({
   variantId: z.string().min(1, "Variant ID is required"),
   stock: z.coerce
