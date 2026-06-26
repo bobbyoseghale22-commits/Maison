@@ -4,33 +4,13 @@ import { unstable_cache } from "next/cache";
 import { connectToDatabase } from "@/lib/db/connect";
 import { Product, Category } from "@/models";
 
-/**
- * Home page data layer.
- *
- * Each getter queries MongoDB directly (Server Component data
- * fetching — no API route needed for a same-origin server render) and
- * falls back to curated placeholder content when the collection is
- * empty or the database is unreachable. This lets the home page
- * render meaningfully today, before any seed/admin tooling exists,
- * while requiring no changes once real products and categories are
- * added — the live query path is already correct against the actual
- * Mongoose schemas.
- *
- * `CardProduct` / `CardCategory` are deliberately small, flat view
- * models (not the full Mongoose document) — sections only ever need a
- * handful of display fields, and keeping the shape flat means
- * fallback data and live data can satisfy the exact same type.
- */
-
 export interface CardProduct {
   id: string;
   slug: string;
   name: string;
-  /** Display label, e.g. brand name or category — shown as an eyebrow on the card. */
   label?: string;
   price: number;
   compareAtPrice?: number;
-  /** True when no product photography exists yet, so the card renders a typographic placeholder. */
   hasImage: boolean;
   imageUrl?: string;
   imageAlt?: string;
@@ -113,14 +93,36 @@ export const getFeaturedCategories = unstable_cache(
         return FALLBACK_CATEGORIES.slice(0, limit);
       }
 
-      return categories.map((category) => ({
-        id: category._id.toString(),
-        slug: category.slug,
-        name: category.name,
-        description: category.description,
-        hasImage: Boolean(category.image),
-        imageUrl: category.image,
-      }));
+      // For each category, resolve image: prefer category.image, fall back to
+      // the first image of the most recent active product in that category.
+      const results = await Promise.all(
+        categories.map(async (category) => {
+          let imageUrl: string | undefined = category.image || undefined;
+
+          if (!imageUrl) {
+            const product = await Product.findOne({
+              isActive: true,
+              category: category._id,
+            })
+              .sort({ createdAt: -1 })
+              .select("images")
+              .lean();
+
+            imageUrl = product?.images?.[0]?.url || undefined;
+          }
+
+          return {
+            id: category._id.toString(),
+            slug: category.slug,
+            name: category.name,
+            description: category.description,
+            hasImage: Boolean(imageUrl),
+            imageUrl,
+          };
+        }),
+      );
+
+      return results;
     } catch {
       return FALLBACK_CATEGORIES.slice(0, limit);
     }
