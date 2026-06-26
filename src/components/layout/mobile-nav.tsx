@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 
-import { mainNav, utilityNav } from "@/config/nav";
+import { mainNav } from "@/config/nav";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -70,19 +70,6 @@ export function MobileNav() {
             ))}
           </ul>
 
-          <ul className="mt-8 flex flex-col gap-3">
-            {utilityNav.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="text-label text-foreground/70 transition-colors hover:text-foreground"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </nav>
 
         <div className="border-t border-border px-6 py-5">
