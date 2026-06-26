@@ -9,20 +9,11 @@ import { HeaderSearch } from "@/components/search/header-search";
 import { MobileSearchSheet } from "@/components/search/mobile-search-sheet";
 import { CartSheet } from "@/components/cart/cart-sheet";
 import { WishlistSheet } from "@/components/wishlist/wishlist-sheet";
+import { getCurrentUser } from "@/lib/auth/utils";
 
-/**
- * Site header. Two-tier structure:
- *   1. A thin utility bar (hidden on mobile) for secondary links —
- *      the "find a store / customer care" register of a flagship
- *      menswear site, kept visually quiet (text-label, low contrast).
- *   2. The main bar: mobile menu trigger (left, below `lg`) / nav
- *      (left, `lg` and up) — centered wordmark — action icons (right).
- *
- * The centered wordmark with flanking nav is the deliberate signature
- * layout choice here (see design rationale in globals.css), distinct
- * from a conventional left-aligned-logo SaaS navbar.
- */
-export function Header() {
+export async function Header() {
+  const user = await getCurrentUser();
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       {/* Utility bar */}
@@ -60,11 +51,19 @@ export function Header() {
         <div className="flex items-center justify-end gap-1">
           <HeaderSearch />
           <MobileSearchSheet />
-          <Button variant="ghost" size="icon" aria-label="Account" asChild>
-            <Link href="/login">
-              <User className="h-[18px] w-[18px]" />
-            </Link>
-          </Button>
+          {user ? (
+            <Button variant="ghost" size="icon" aria-label="My Account" asChild>
+              <Link href="/account">
+                <User className="h-[18px] w-[18px]" />
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="ghost" size="icon" aria-label="Sign In" asChild>
+              <Link href="/login">
+                <User className="h-[18px] w-[18px]" />
+              </Link>
+            </Button>
+          )}
           <WishlistSheet />
           <CartSheet />
         </div>
