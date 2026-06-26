@@ -81,7 +81,15 @@ export const productFormSchema = z.object({
     .optional()
     .or(z.literal(0))
     .transform((v) => (v === 0 || v === undefined ? undefined : v)),
-  tags: z
+    tags: z
+    .union([
+      z.string().trim().optional().or(z.literal("")),
+      z.array(z.string()),
+    ])
+    .transform((v) => {
+      if (Array.isArray(v)) return v.map((t) => t.trim().toLowerCase()).filter(Boolean);
+      return v ? v.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean) : [];
+    }),
     .string()
     .trim()
     .optional()
