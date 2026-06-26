@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { adminGetCategories } from "@/lib/data/admin";
 import { AdminTable } from "@/components/admin/admin-table";
 import type { AdminCategoryRow } from "@/lib/data/admin";
+import { CategoryForm } from "@/components/admin/category-form";
 
 export const metadata: Metadata = { title: "Categories" };
 
@@ -20,6 +21,7 @@ export default async function AdminCategoriesPage() {
         <p className="text-sm text-muted-foreground">
           {categories.length} categor{categories.length !== 1 ? "ies" : "y"}
         </p>
+        <CategoryForm categories={categories} />
       </div>
 
       <AdminTable<AdminCategoryRow>
