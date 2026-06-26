@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       sortOrder: parsed.data.sortOrder,
     });
 
-    return NextResponse.json({ id: category._id.toString(), name: category.name }, { status: 201 });
+    return NextResponse.json({ id: (category._id as { toString(): string }).toString(), name: category.name }, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/categories]", err);
     return NextResponse.json({ error: "Failed to create category." }, { status: 500 });
