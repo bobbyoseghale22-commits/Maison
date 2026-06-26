@@ -19,13 +19,13 @@ interface NavigationProps {
  */
 export function Navigation({ className }: NavigationProps) {
   return (
-    <nav className={cn("hidden items-center gap-8 lg:flex", className)}>
+        <nav className={cn("hidden items-center gap-6 lg:flex xl:gap-8", className)}>
       {mainNav.map((item) => (
         <Link
           key={item.href}
           href={item.href}
           className={cn(
-            "text-label group relative py-2 text-foreground/80",
+            "text-label group relative whitespace-nowrap py-2 text-foreground/80",
             "transition-colors hover:text-foreground",
             "focus-visible:outline-none focus-visible:text-foreground",
           )}
