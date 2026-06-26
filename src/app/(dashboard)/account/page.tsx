@@ -21,6 +21,16 @@ export default async function AccountPage() {
       </div>
 
       <div className="mt-10 max-w-sm space-y-3">
+        {user.role === "admin" && (
+          <Link
+            href="/admin"
+            className="flex items-center justify-between border border-border px-5 py-4 hover:bg-muted transition-colors bg-foreground text-background"
+          >
+            <span className="text-sm font-medium">Admin Dashboard</span>
+            <span>→</span>
+          </Link>
+        )}
+
         <Link
           href="/orders"
           className="flex items-center justify-between border border-border px-5 py-4 hover:bg-muted transition-colors"
