@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { getCart } from "@/lib/data/cart";
+import { connectToDatabase } from "@/lib/db/connect";
+import { Cart } from "@/models";
+import { getCurrentUser } from "@/lib/auth/utils";
+import { readGuestId, clearGuestId } from "@/lib/cart/guest-id";
 
 /**
  * GET /api/cart
@@ -16,5 +20,33 @@ export async function GET() {
   } catch (err) {
     console.error("[GET /api/cart]", err);
     return NextResponse.json({ error: "Failed to load cart." }, { status: 500 });
+  }
+}
+
+/**
+ * DELETE /api/cart
+ * Clears the current user's or guest's cart. Called after successful
+ * payment so the client can immediately reflect an empty cart without
+ * waiting for the Stripe webhook to fire.
+ */
+export async function DELETE() {
+  try {
+    await connectToDatabase();
+    const user = await getCurrentUser();
+
+    if (user) {
+      await Cart.deleteOne({ user: user.id });
+    } else {
+      const guestId = await readGuestId();
+      if (guestId) {
+        await Cart.deleteOne({ guestId });
+        await clearGuestId();
+      }
+    }
+
+    return NextResponse.json({ cartId: null, isGuest: !user, items: [], itemCount: 0, subtotal: 0 });
+  } catch (err) {
+    console.error("[DELETE /api/cart]", err);
+    return NextResponse.json({ error: "Failed to clear cart." }, { status: 500 });
   }
 }

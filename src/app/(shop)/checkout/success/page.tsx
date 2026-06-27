@@ -8,6 +8,7 @@ import { connectToDatabase } from "@/lib/db/connect";
 import { Order } from "@/models";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/helpers";
+import { ClearCartEffect } from "@/components/checkout/clear-cart-effect";
 
 export const metadata: Metadata = {
   title: "Order Confirmed",
@@ -64,6 +65,7 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
 
   return (
     <div className="container flex flex-col items-center py-24 text-center sm:py-32">
+      <ClearCartEffect />
       <div className="flex h-16 w-16 items-center justify-center border border-border">
         <CheckCircle className="h-8 w-8 text-foreground" aria-hidden="true" />
       </div>

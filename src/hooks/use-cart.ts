@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import type { CartView } from "@/lib/data/cart";
 
@@ -184,6 +185,20 @@ const CartContext = React.createContext<UseCartReturn | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const cart = useCart();
+  const { data: session } = useSession();
+  const userId = (session?.user as { id?: string } | undefined)?.id ?? null;
+  const prevUserId = React.useRef(userId);
+
+  // Re-fetch the cart whenever the signed-in user changes (login / logout /
+  // switch account). Without this, the previous user's cart lingers in React
+  // memory until the page is fully reloaded.
+  React.useEffect(() => {
+    if (prevUserId.current !== userId) {
+      prevUserId.current = userId;
+      void cart.refresh();
+    }
+  }, [userId, cart]);
+
   return React.createElement(CartContext.Provider, { value: cart }, children);
 }
 
