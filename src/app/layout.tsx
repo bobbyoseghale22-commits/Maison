@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     "suiting",
     "outerwear",
     "luxury clothing",
-    "considered menswear",
+    "menswear",
   ],
 
   authors: [{ name: "Maison Noir" }],
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Maison Noir",
     locale: "en_US",
-    title: "Maison Noir — Considered Menswear",
+    title: "Maison Noir — Menswear",
     description:
       "Tailored menswear cut from the finest cloth. Shop suiting, outerwear, footwear, and accessories built to last seasons, not trends.",
     url: "/",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@maisonnoir",        // update to your actual handle
     creator: "@maisonnoir",
-    title: "Maison Noir — Considered Menswear",
+    title: "Maison Noir — Menswear",
     description:
       "Tailored menswear cut from the finest cloth. Shop suiting, outerwear, footwear, and accessories.",
   },
