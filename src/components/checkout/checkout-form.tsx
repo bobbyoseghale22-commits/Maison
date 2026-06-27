@@ -39,7 +39,6 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<CheckoutInput>({
@@ -53,17 +52,10 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
     },
   });
 
-  const shippingAddress = watch("shippingAddress");
-
-  React.useEffect(() => {
-    if (sameAsShipping) {
-      setValue("billingAddress", shippingAddress, { shouldValidate: false });
-    }
-  }, [sameAsShipping, shippingAddress, setValue]);
-
   async function onSubmit(values: CheckoutInput) {
     const payload: CheckoutInput = {
       ...values,
+      billingAddress: sameAsShipping ? values.shippingAddress : values.billingAddress,
       couponCode: appliedCoupon?.code ?? "",
       guestEmail: isGuest ? values.guestEmail : "",
     };
