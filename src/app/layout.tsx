@@ -4,8 +4,7 @@ import { Toaster } from "sonner";
 import "@/app/globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { CartProvider } from "@/hooks/use-cart";
-import { WishlistProvider } from "@/hooks/use-wishlist";
+import { Providers } from "@/components/providers";
 import { env } from "@/config/env";
 
 const inter = Inter({
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
 
   title: {
-    default: "Maison Noir — Considered Menswear",
+    default: "Maison Noir - Menswear",
     template: "%s | Maison Noir",
   },
 
@@ -102,13 +101,11 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfairDisplay.variable} flex min-h-screen flex-col bg-background font-sans text-foreground antialiased`}
       >
-        <CartProvider>
-          <WishlistProvider>
+        <Providers>
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
-          </WishlistProvider>
-        </CartProvider>
+        </Providers>
         <Toaster
           position="bottom-center"
           toastOptions={{

@@ -22,17 +22,20 @@ export async function Header() {
         {/* Logo — left on desktop, centered on mobile via flex-1 trick */}
         <Link
           href="/"
-          className="font-display text-xl italic tracking-tight text-foreground sm:text-2xl lg:mr-8 lg:text-3xl"
+          className="font-display text-xl italic tracking-tight text-foreground sm:text-2xl lg:text-3xl"
           aria-label="Maison Noir — home"
         >
           Maison Noir
         </Link>
 
-        {/* Desktop nav — sits right of logo */}
-        <Navigation className="flex-1" />
+        {/* Spacer — pushes nav to center on desktop, icons right on mobile */}
+        <div className="flex-1" />
 
-        {/* Spacer pushes icons right on mobile (where Navigation is hidden) */}
-        <div className="flex-1 lg:hidden" />
+        {/* Desktop nav — centered absolutely between logo and icons */}
+        <Navigation />
+
+        {/* Spacer — mirrors left side so nav stays centered */}
+        <div className="flex-1" />
 
         {/* Icon cluster */}
         <div className="flex items-center gap-0.5 sm:gap-1">

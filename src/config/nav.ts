@@ -16,7 +16,7 @@ export interface NavLink {
 }
 
 export const mainNav: NavLink[] = [
-  { label: "New Arrivals", href: "/products?sort=newest" },
+  { label: "Shop", href: "/products?sort=newest" },
   { label: "Tailoring", href: "/products?category=tailoring" },
   { label: "Outerwear", href: "/products?category=outerwear" },
   { label: "Footwear", href: "/products?category=footwear" },
