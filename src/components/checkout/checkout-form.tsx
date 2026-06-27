@@ -92,7 +92,7 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit, () => toast.error("Please fill in all required fields."))}>
       <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1fr_400px]">
         <div className="space-y-10">
           {isGuest && (
