@@ -21,7 +21,6 @@ const footerColumns: FooterColumn[] = [
   {
     title: "Client Services",
     links: [
-      { label: "Find a Store", href: "/stores" },
       { label: "Shipping & Returns", href: "/support/shipping" },
       { label: "Size Guide", href: "/support/sizing" },
       { label: "Contact Us", href: "/support" },
@@ -38,26 +37,22 @@ const footerColumns: FooterColumn[] = [
   },
 ];
 
-/**
- * Site footer. Hairline rules divide every region instead of card
- * backgrounds or shadows — keeps the same restrained, label-driven
- * vocabulary as the header (see `text-label` utility in globals.css).
- */
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-background">
+    <footer className="bg-[#0a0a0a] text-white">
+      {/* Main footer content */}
       <div className="container py-16">
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Newsletter — the most editorial block, given the most space */}
+          {/* Newsletter */}
           <div className="lg:pr-8">
-            <h2 className="font-display text-2xl italic text-foreground">
+            <h2 className="font-display text-2xl italic text-white">
               Maison Noir
             </h2>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/50">
               Considered menswear, cut from the finest cloth. Join our list
               for early access to new collections and private appointments.
             </p>
-            <form className="mt-6 flex max-w-xs items-stretch border-b border-foreground/30 focus-within:border-foreground">
+            <form className="mt-6 flex max-w-xs items-stretch border-b border-white/30 focus-within:border-white">
               <label htmlFor="footer-email" className="sr-only">
                 Email address
               </label>
@@ -66,13 +61,13 @@ export function Footer() {
                 type="email"
                 required
                 placeholder="Email address"
-                className="w-full bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                className="w-full bg-transparent py-2 text-sm text-white placeholder:text-white/40 focus:outline-none"
               />
               <Button
                 type="submit"
                 variant="ghost"
                 size="sm"
-                className="text-label shrink-0 px-2"
+                className="text-label shrink-0 px-2 text-white hover:text-white/70 hover:bg-transparent"
               >
                 Join
               </Button>
@@ -81,7 +76,7 @@ export function Footer() {
 
           {footerColumns.map((column) => (
             <nav key={column.title} aria-label={column.title}>
-              <h3 className="text-label text-foreground/50">
+              <h3 className="text-label text-white/40 tracking-widest text-xs uppercase">
                 {column.title}
               </h3>
               <ul className="mt-5 flex flex-col gap-3">
@@ -89,7 +84,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-foreground/80 transition-colors hover:text-foreground"
+                      className="text-sm text-white/70 transition-colors hover:text-white"
                     >
                       {link.label}
                     </Link>
@@ -101,27 +96,38 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-border">
+      {/* Legal bar */}
+      <div className="border-t border-white/10">
         <div className="container flex flex-col items-center gap-4 py-6 sm:flex-row sm:justify-between">
-          <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Maison Noir. All rights
-            reserved.
+          <p className="text-xs text-white/40">
+            &copy; {new Date().getFullYear()} Maison Noir. All rights reserved.
           </p>
           <nav aria-label="Legal" className="flex items-center gap-6">
             <Link
               href="/legal/privacy"
-              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+              className="text-xs text-white/40 transition-colors hover:text-white"
             >
               Privacy Policy
             </Link>
             <Link
               href="/legal/terms"
-              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
+              className="text-xs text-white/40 transition-colors hover:text-white"
             >
               Terms of Service
             </Link>
           </nav>
         </div>
+      </div>
+
+      {/* Big wordmark — inspired by luxury house footer treatment */}
+      <div className="overflow-hidden border-t border-white/10 select-none">
+        <p
+          aria-hidden="true"
+          className="font-display italic font-semibold leading-none text-white whitespace-nowrap px-4"
+          style={{ fontSize: "clamp(4rem, 18vw, 18rem)" }}
+        >
+          Maison Noir
+        </p>
       </div>
     </footer>
   );
