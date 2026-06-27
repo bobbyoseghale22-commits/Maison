@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -30,7 +29,6 @@ interface CheckoutFormProps {
  * /checkout/cancel (abandoned/failed).
  */
 export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
-  const router = useRouter();
   const isGuest = !userEmail;
 
   const [sameAsShipping, setSameAsShipping] = React.useState(true);
@@ -85,8 +83,8 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
       }
 
       if (data.sessionUrl) {
-        // Redirect to Stripe-hosted payment page
-        router.push(data.sessionUrl);
+        // router.push only handles internal routes — use location for external Stripe URL
+        window.location.href = data.sessionUrl;
       }
     } catch {
       toast.error("Something went wrong. Please try again.");
