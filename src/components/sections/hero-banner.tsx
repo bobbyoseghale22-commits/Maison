@@ -1,32 +1,75 @@
+"use client";
+
+import * as React from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-/**
- * Hero banner. No product photography exists yet (see
- * `src/lib/data/home.ts`), so this leans fully into the typographic
- * signature — an oversized italic display headline on a near-black
- * field — rather than a generic image-behind-text hero with a gap
- * where a photo should be.
- *
- * `<h1>` lives here, the only one on the page, satisfying both SEO
- * and the single-page-heading accessibility convention.
- */
+const SLIDES = [
+  {
+    src: "https://res.cloudinary.com/duoo6ywtv/image/upload/v1782392777/samples/ecommerce/analog-classic.jpg",
+    alt: "Analog classic — Autumn / Winter Collection",
+  },
+  {
+    src: "https://res.cloudinary.com/duoo6ywtv/image/upload/v1782392782/samples/ecommerce/leather-bag-gray.jpg",
+    alt: "Leather bag in grey — Autumn / Winter Collection",
+  },
+  {
+    src: "https://res.cloudinary.com/duoo6ywtv/image/upload/v1782392782/samples/ecommerce/accessories-bag.jpg",
+    alt: "Accessories bag — Autumn / Winter Collection",
+  },
+];
+
+const INTERVAL_MS = 5000;
+
 export function HeroBanner() {
+  const [current, setCurrent] = React.useState(0);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const advance = React.useCallback((index: number) => {
+    setCurrent(index);
+  }, []);
+
+  React.useEffect(() => {
+    timerRef.current = setTimeout(() => {
+      setCurrent((prev) => (prev + 1) % SLIDES.length);
+    }, INTERVAL_MS);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [current]);
+
   return (
     <section
       aria-label="Featured collection"
       className="relative flex min-h-[85svh] items-end overflow-hidden bg-foreground text-background sm:min-h-[90svh]"
     >
-      {/* Quiet ambient texture — a single hairline frame, not a photo */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-6 border border-background/10 sm:inset-10"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-accent/10 blur-3xl"
-      />
+      {SLIDES.map((slide, i) => (
+        <div
+          key={slide.src}
+          aria-hidden={i !== current}
+          className={cn(
+            "absolute inset-0 transition-opacity duration-1000",
+            i === current ? "opacity-100" : "opacity-0",
+          )}
+        >
+          <Image
+            src={slide.src}
+            alt={slide.alt}
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority={i === 0}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-foreground/20"
+          />
+        </div>
+      ))}
 
       <div className="container relative pb-16 pt-32 sm:pb-24">
         <p className="text-label text-background/60">
@@ -58,6 +101,22 @@ export function HeroBanner() {
           >
             <Link href="/products">Explore The Collection</Link>
           </Button>
+        </div>
+
+        <div className="mt-8 flex gap-2" role="tablist" aria-label="Slideshow controls">
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              role="tab"
+              aria-selected={i === current}
+              aria-label={`Go to slide ${i + 1}`}
+              onClick={() => advance(i)}
+              className={cn(
+                "h-px transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-background",
+                i === current ? "w-8 bg-background" : "w-4 bg-background/40 hover:bg-background/70",
+              )}
+            />
+          ))}
         </div>
       </div>
     </section>
