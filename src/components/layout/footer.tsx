@@ -119,12 +119,12 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Big wordmark — inspired by luxury house footer treatment */}
+      {/* Big wordmark — centered, scaled to fit viewport */}
       <div className="overflow-hidden border-t border-white/10 select-none">
         <p
           aria-hidden="true"
-          className="font-display italic font-semibold leading-none text-white whitespace-nowrap px-4"
-          style={{ fontSize: "clamp(4rem, 18vw, 18rem)" }}
+          className="font-display italic font-semibold leading-none text-white text-center w-full"
+          style={{ fontSize: "clamp(3rem, 11vw, 10rem)" }}
         >
           Maison Noir
         </p>
