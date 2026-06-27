@@ -111,7 +111,7 @@ export default async function AdminAnalyticsPage() {
 
         <ChartPanel
           title="Monthly Orders"
-          subtitle="All orders · trailing 12 months"
+          subtitle="Paid orders · trailing 12 months"
           aside={
             <span className="font-display text-xl italic text-foreground">
               {monthlyOrders.reduce((s, d) => s + d.value, 0)}

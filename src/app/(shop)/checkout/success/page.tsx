@@ -5,7 +5,9 @@ import { CheckCircle } from "lucide-react";
 
 import { stripe } from "@/lib/stripe/config";
 import { connectToDatabase } from "@/lib/db/connect";
-import { Order } from "@/models";
+import { Order, Cart } from "@/models";
+import { getCurrentUser } from "@/lib/auth/utils";
+import { readGuestId } from "@/lib/cart/guest-id";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/helpers";
 import { ClearCartEffect } from "@/components/checkout/clear-cart-effect";
@@ -50,13 +52,31 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
     redirect(`/checkout/cancel`);
   }
 
-  // Look up the order from our DB
+  // Look up the order and mark it paid if the webhook hasn't fired yet
   const orderId = session.client_reference_id ?? session.metadata?.orderId;
   let order = null;
 
   if (orderId) {
     await connectToDatabase();
-    order = await Order.findById(orderId).select("orderNumber total itemCount").lean();
+
+    // Fallback: update order to paid in case the Stripe webhook hasn't fired yet
+    const existing = await Order.findById(orderId).select("orderNumber total itemCount paymentStatus user guestEmail");
+    if (existing && existing.paymentStatus !== "paid") {
+      existing.status = "paid";
+      existing.paymentStatus = "paid";
+      existing.stripeCheckoutSessionId = session.id;
+      await existing.save();
+
+      // Also clear the cart (webhook does this too, but may not have fired)
+      const user = await getCurrentUser();
+      if (user) {
+        await Cart.deleteOne({ user: user.id });
+      } else {
+        const guestId = await readGuestId();
+        if (guestId) await Cart.deleteOne({ guestId });
+      }
+    }
+    order = existing;
   }
 
   const orderNumber = order?.orderNumber ?? session.metadata?.orderNumber ?? null;

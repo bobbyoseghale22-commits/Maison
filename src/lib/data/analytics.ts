@@ -159,9 +159,9 @@ export async function getAnalyticsData(): Promise<AnalyticsSummary> {
       },
     ]),
 
-    // ── Monthly order counts (12 months, all orders) ──────────────────────
+    // ── Monthly order counts (12 months, paid orders only) ───────────────
     Order.aggregate<{ _id: { year: number; month: number }; count: number }>([
-      { $match: { createdAt: { $gte: twelveMonthsAgo } } },
+      { $match: { paymentStatus: "paid", createdAt: { $gte: twelveMonthsAgo } } },
       {
         $group: {
           _id: {
@@ -218,9 +218,10 @@ export async function getAnalyticsData(): Promise<AnalyticsSummary> {
       { $group: { _id: null, total: { $sum: "$total" } } },
     ]).then((r) => r[0] ?? { total: 0 }),
 
-    Order.countDocuments({}),
-    Order.countDocuments({ createdAt: { $gte: startOfThisMonth } }),
+    Order.countDocuments({ paymentStatus: "paid" }),
+    Order.countDocuments({ paymentStatus: "paid", createdAt: { $gte: startOfThisMonth } }),
     Order.countDocuments({
+      paymentStatus: "paid",
       createdAt: { $gte: startOfLastMonth, $lt: startOfThisMonth },
     }),
 
