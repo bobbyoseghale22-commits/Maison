@@ -40,6 +40,7 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<CheckoutInput>({
     resolver: zodResolver(checkoutSchema),
@@ -170,7 +171,19 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
             />
           </section>
 
-          <Button type="submit" size="lg" disabled={isSubmitting} className="w-full rounded-none">
+          <Button
+            type="submit"
+            size="lg"
+            disabled={isSubmitting}
+            className="w-full rounded-none"
+            onClick={() => {
+              if (sameAsShipping) {
+                // Copy shipping → billing before react-hook-form validates
+                const shipping = getValues("shippingAddress");
+                setValue("billingAddress", shipping);
+              }
+            }}
+          >
             {isSubmitting ? "Redirecting to Payment…" : "Continue to Payment"}
           </Button>
 
