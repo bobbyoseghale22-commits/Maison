@@ -40,7 +40,7 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
     register,
     handleSubmit,
     setValue,
-    watch,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<CheckoutInput>({
     resolver: zodResolver(checkoutSchema),
@@ -52,15 +52,6 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
       notes: "",
     },
   });
-
-  // Keep billing address continuously in sync with shipping when checkbox is checked.
-  // This runs on every shipping field change so billing is valid when the form submits.
-  const shippingAddress = watch("shippingAddress");
-  React.useEffect(() => {
-    if (sameAsShipping) {
-      setValue("billingAddress", shippingAddress, { shouldValidate: false });
-    }
-  }, [sameAsShipping, shippingAddress, setValue]);
 
   async function onSubmit(values: CheckoutInput) {
     const payload: CheckoutInput = {
@@ -185,6 +176,13 @@ export function CheckoutForm({ cart, userEmail }: CheckoutFormProps) {
             size="lg"
             disabled={isSubmitting}
             className="w-full rounded-none"
+            onClick={() => {
+              if (sameAsShipping) {
+                // Copy shipping → billing before react-hook-form validates
+                const shipping = getValues("shippingAddress");
+                setValue("billingAddress", shipping);
+              }
+            }}
           >
             {isSubmitting ? "Redirecting to Payment…" : "Continue to Payment"}
           </Button>
