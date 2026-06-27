@@ -197,6 +197,7 @@ export interface AdminCategoryRow {
   slug: string;
   description?: string;
   isActive: boolean;
+  showOnHomepage: boolean;
   sortOrder: number;
   parentName?: string;
   productCount: number;
@@ -224,6 +225,7 @@ export async function adminGetCategories(): Promise<AdminCategoryRow[]> {
     slug: c.slug,
     description: c.description,
     isActive: c.isActive,
+    showOnHomepage: c.showOnHomepage ?? false,
     sortOrder: c.sortOrder,
     parentName: (c.parent as { name: string } | null)?.name,
     productCount: countMap.get(c._id.toString()) ?? 0,

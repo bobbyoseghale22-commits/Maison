@@ -28,6 +28,7 @@ export function CategoryForm({ categories }: CategoryFormProps) {
   const [parent, setParent] = React.useState("");
   const [sortOrder, setSortOrder] = React.useState(0);
   const [isActive, setIsActive] = React.useState(true);
+  const [showOnHomepage, setShowOnHomepage] = React.useState(false);
   const [error, setError] = React.useState("");
 
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -51,6 +52,7 @@ export function CategoryForm({ categories }: CategoryFormProps) {
           description: description || undefined,
           parent: parent || undefined,
           isActive,
+          showOnHomepage,
           sortOrder,
         }),
       });
@@ -181,6 +183,17 @@ export function CategoryForm({ categories }: CategoryFormProps) {
               className="h-4 w-4"
             />
             <label htmlFor="isActive" className="text-sm">Active</label>
+          </div>
+
+          <div className="flex items-end gap-2 pb-0.5">
+            <input
+              type="checkbox"
+              id="showOnHomepage"
+              checked={showOnHomepage}
+              onChange={(e) => setShowOnHomepage(e.target.checked)}
+              className="h-4 w-4"
+            />
+            <label htmlFor="showOnHomepage" className="text-sm">Homepage</label>
           </div>
         </div>
 

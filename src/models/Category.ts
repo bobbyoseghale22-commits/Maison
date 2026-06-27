@@ -19,6 +19,7 @@ export interface ICategory {
   image?: string;
   parent?: Types.ObjectId | null;
   isActive: boolean;
+  showOnHomepage: boolean;
   sortOrder: number;
   createdAt: Date;
   updatedAt: Date;
@@ -63,6 +64,10 @@ const categorySchema = new Schema<CategoryDocument>(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    showOnHomepage: {
+      type: Boolean,
+      default: false,
     },
     sortOrder: {
       type: Number,

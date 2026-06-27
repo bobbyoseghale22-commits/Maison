@@ -4,6 +4,7 @@ import { adminGetCategories } from "@/lib/data/admin";
 import { AdminTable } from "@/components/admin/admin-table";
 import type { AdminCategoryRow } from "@/lib/data/admin";
 import { CategoryForm } from "@/components/admin/category-form";
+import { HomepageToggle } from "@/components/admin/homepage-toggle";
 
 export const metadata: Metadata = { title: "Categories" };
 
@@ -74,6 +75,13 @@ export default async function AdminCategoriesPage() {
               >
                 {row.isActive ? "Active" : "Inactive"}
               </span>
+            ),
+          },
+          {
+            key: "showOnHomepage",
+            header: "Homepage",
+            render: (row) => (
+              <HomepageToggle id={row.id} showOnHomepage={row.showOnHomepage} />
             ),
           },
           {
